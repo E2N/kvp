@@ -23,9 +23,12 @@
  */
 package de.e2n;
 
-import org.testng.annotations.Test;
-import static org.testng.Assert.*;
-import org.testng.annotations.DataProvider;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class KVPTest {
     
@@ -69,77 +72,79 @@ public class KVPTest {
         assertEquals(actual, expected);
     }
 
-    @DataProvider(name = "datasetValues")
-    public Object[][] createDatasetValues() {
-        return new Object[][]{
-            {"",  ""},
-            {"key", "key"},
-            {"0", "0"},
-            {"a",  "a"},
-            {"_", "_"},
-            {".", "."},
-            {"$", "$"},
-            {"@", "@"},
-            {"\\", "\"\\\""},
-            {"https://foo.example.com", "\"https://foo.example.com\""},
-            {"\"https://foo.example.com\"", "\"https://foo.example.com\""},
-            {"100ms",  "100ms"},
-            {"100 ms", "\"100 ms\""},
-            {"100\\ ms", "100\\ ms"},
-            {"Valentine's Day", "\"Valentine's Day\""},
-            {"\"", "\"\"\""},
-            {"\"\"\"", "\"\"\""},
-            {"\"\"\"\"", "\"\"\"\""},
-            {"$\"", "\"$\"\""},
-            {"\"$", "\"\"$\""},
-            {"key: \"value\" ", "\"key: \"value\" \""}, 
-            {"key\\:\\ \\\"value\\\"", "key\\:\\ \\\"value\\\""}, 
-        };
-    }
-    
-    @Test(dataProvider = "datasetValues", enabled = true)
+    @ParameterizedTest
+    @MethodSource("createDatasetValues")
     public void test_escape2(String plain, String expected) {
         assertEquals(KVP.escape(plain), expected);
     }
-    
-    @DataProvider(name = "invalid keys")
-    public Object[][] createInvalidKeyDataset() {
-        return new Object[][] {
-            { null },
-            { "" },
-            { "0" },
-            { "00" },
-            { "+" },
+
+    public static String[][] createDatasetValues() {
+        return new String[][]{
+                {"",  ""},
+                {"key", "key"},
+                {"0", "0"},
+                {"a",  "a"},
+                {"_", "_"},
+                {".", "."},
+                {"$", "$"},
+                {"@", "@"},
+                {"\\", "\"\\\""},
+                {"https://foo.example.com", "\"https://foo.example.com\""},
+                {"\"https://foo.example.com\"", "\"https://foo.example.com\""},
+                {"100ms",  "100ms"},
+                {"100 ms", "\"100 ms\""},
+                {"100\\ ms", "100\\ ms"},
+                {"Valentine's Day", "\"Valentine's Day\""},
+                {"\"", "\"\"\""},
+                {"\"\"\"", "\"\"\""},
+                {"\"\"\"\"", "\"\"\"\""},
+                {"$\"", "\"$\"\""},
+                {"\"$", "\"\"$\""},
+                {"key: \"value\" ", "\"key: \"value\" \""},
+                {"key\\:\\ \\\"value\\\"", "key\\:\\ \\\"value\\\""},
         };
     }
-    
-    @Test(groups = { "key" }, dataProvider = "invalid keys", expectedExceptions = { NullPointerException.class, IllegalArgumentException.class })
+
+    @Disabled
+    @ParameterizedTest
+    @MethodSource("createInvalidKeyDataset")
     public void test_invalid_keys(String key) {
         KVP.key(key);
     }
-    
-    @DataProvider(name = "valid keys")
-    public Object[][] createValidKeyDataset() {
+
+    public static Object[][] createInvalidKeyDataset() {
         return new Object[][] {
-            { "a" },
-            { "1a" },
-            { "a1" },
-            { "0.0" },
-            { "key" },
-            { "$key" },
-            { "_key" },
-            { ".key" },
-            { "@key" },
-            { "key$something" },
-            { "key_something" },
-            { "key.something" },
-            { "key@something" }
+                { null },
+                { "" },
+                { "0" },
+                { "00" },
+                { "+" },
         };
     }
-    
-    @Test(groups = { "key" }, dataProvider = "valid keys")
+
+
+    @ParameterizedTest
+    @MethodSource("createValidKeyDataset")
     public void test_valid_keys(String key) {
         assertEquals(key, KVP.key(key));
+    }
+
+    public static Object[][] createValidKeyDataset() {
+        return new Object[][] {
+                { "a" },
+                { "1a" },
+                { "a1" },
+                { "0.0" },
+                { "key" },
+                { "$key" },
+                { "_key" },
+                { ".key" },
+                { "@key" },
+                { "key$something" },
+                { "key_something" },
+                { "key.something" },
+                { "key@something" }
+        };
     }
     
 }

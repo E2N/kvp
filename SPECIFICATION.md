@@ -6,9 +6,12 @@ KVDELIMITER KEY {whitespace} SEPARATOR {whitespace} VALUE{UNIT} KVDELIMITER
 
 ## Term Definitions
 
+- An alphanumeric characters is any character in the character set a-zA-Z and 0-9.
+- A character sequence is numeric if it contains only characters from the set 0-9. 
+
 ### KVDELIMITER
 
-- at least one characters from " " "," ";" "\t" "\r" "\n"
+- at least one characters from " " "," ";" "\t" "\r" and "\n"
   - space " "
   - comma " "
   - semicolon ";"
@@ -18,8 +21,9 @@ KVDELIMITER KEY {whitespace} SEPARATOR {whitespace} VALUE{UNIT} KVDELIMITER
 
 ### KEY
 
-- the allowed list of characters is any alphanumeric plus "_" "." "$" "@"
-- must at least one non-numeric character from the allowed list of characters
+- must have at least one character
+- the allowed list of characters is any alphanumeric plus "_" "." "$" and "@"
+- the first character must be non numeric character
 - can be enclosed in double quotes to escape non allowed characters
 
 ### {whitespace} 
@@ -56,6 +60,6 @@ KVDELIMITER KEY {whitespace} SEPARATOR {whitespace} VALUE{UNIT} KVDELIMITER
 ## Additional Notes
 
 - UTF-8 should be the default encoding
-- Unless escaped the characters "-", "+" should not be allowed in KEY or VALUE 
+- Unless escaped the characters "-", "+" should not be used in KEY or VALUE 
 - Character escaping should be done with doubles quotes instead of a backslash
-- Pick a consistent SEPARATOR for all key value pairs
+- Pick a consistent SEPARATOR for all key value pairs and do not mix different separators in one record
